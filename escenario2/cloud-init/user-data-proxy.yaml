@@ -1,0 +1,54 @@
+#cloud-config
+hostname: proxy
+
+timezone: Europe/Madrid
+locale: es_ES.UTF-8
+
+keyboard:
+  layout: es
+  variant: ''
+
+bootcmd:
+  - for i in {1..15}; do ping -c1 8.8.8.8 && break || sleep 2; done
+  - for i in {1..10}; do getent hosts deb.debian.org && break || sleep 2; done
+
+users:
+  - name: debian
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCmjoVIoZCx4QFXvljqozXGqxxlSvO7V2aizqyPgMfGqnyl0J9YXo6zrcWYwyWMnMdRdwYZgHqfiiFCUn2QDm6ZuzC4Lcx0K3ZwO2lgL4XaATykVLneHR1ib6RNroFcClN69cxWsdwQW6dpjpiBDXf8m6/qxVP3EHwUTsP8XaOV7WkcCAqfYAMvpWLISqYme6e+6ZGJUIPkDTxavu5JTagDLwY+py1WB53eoDWsG99gmvyit2O1Eo+jRWN+mgRHIxJTrFtLS6o4iWeshPZ6LvCZ/Pum12Oj4B4bjGSHzrKjHZgTwhVJ/LDq3v71/PP4zaI3gVB9ZalemSxqomgbTlnT jose@debian
+
+chpasswd:
+  expire: False
+  users:
+    - name: debian
+      password: asdasd
+      type: text
+
+write_files:
+  - path: /etc/apt/apt.conf.d/99force-ipv4
+    permissions: "0644"
+    content: |
+      Acquire::ForceIPv4 "true";
+  - path: /etc/default/keyboard
+    owner: root:root
+    permissions: "0644"
+    content: |
+      XKBMODEL="pc105"
+      XKBLAYOUT="es"
+      XKBVARIANT=""
+      XKBOPTIONS=""
+      BACKSPACE="guess"
+
+package_update: true
+packages:
+  - qemu-guest-agent
+  - kbd
+  - console-data
+
+runcmd:
+  - loadkeys es || true
+  - 'command -v setupcon >/dev/null 2>&1 && setupcon || true'
+  - localectl set-locale LANG=es_ES.UTF-8 || true

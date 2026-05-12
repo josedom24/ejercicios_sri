@@ -1,0 +1,8 @@
+network:
+  version: 2
+  ethernets:
+    ens3:
+      dhcp4: true                    # e1-nat-dhcp con DHCP (acceso exterior)
+    ens4:
+      dhcp4: false
+      addresses: ["10.0.0.1/24"]    # IP estática en e1-muy-aislada
