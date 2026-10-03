@@ -1,0 +1,49 @@
+- name: Instalar apache2
+  ansible.builtin.apt:
+    name: apache2
+    state: present
+
+- name: Crear el DocumentRoot de cada virtual host
+  ansible.builtin.file:
+    path: "{{ item.documentroot }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+  loop: "{{ virtualhosts }}"
+
+- name: Página principal de cada virtual host
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ item.documentroot }}/index.html"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+  loop: "{{ virtualhosts }}"
+
+- name: Directorio nuevodirectorio en cada virtual host
+  ansible.builtin.copy:
+    src: nuevodirectorio
+    dest: "{{ item.documentroot }}/"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+    directory_mode: "0755"
+  loop: "{{ virtualhosts }}"
+
+- name: Configuración de cada virtual host
+  ansible.builtin.template:
+    src: vhost.conf.j2
+    dest: "/etc/apache2/sites-available/{{ item.nombre }}.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ virtualhosts }}"
+  notify: Recargar apache2
+
+- name: Activar cada virtual host
+  ansible.builtin.command:
+    cmd: "a2ensite {{ item.nombre }}"
+    creates: "/etc/apache2/sites-enabled/{{ item.nombre }}.conf"
+  loop: "{{ virtualhosts }}"
+  notify: Recargar apache2

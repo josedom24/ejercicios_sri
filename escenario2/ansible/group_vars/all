@@ -1,0 +1,9 @@
+# Virtual hosts que se crean en el backend. Cada elemento de la lista es un
+# virtual host:
+#   nombre:       nombre del fichero en /etc/apache2/sites-available/ (sin .conf)
+#   servername:   ServerName del virtual host
+#   documentroot: directorio con el contenido
+virtualhosts:
+  - nombre: vhost1
+    servername: interno.ejemplo.org
+    documentroot: /var/www/ejemplo

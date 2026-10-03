@@ -1,0 +1,8 @@
+# Fichero generado por Ansible
+<VirtualHost *:80>
+    ServerName   {{ item.servername }}
+    DocumentRoot {{ item.documentroot }}
+
+    ErrorLog  ${APACHE_LOG_DIR}/{{ item.nombre }}_error.log
+    CustomLog ${APACHE_LOG_DIR}/{{ item.nombre }}_access.log combined
+</VirtualHost>

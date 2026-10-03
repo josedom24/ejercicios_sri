@@ -1,0 +1,11 @@
+- name: Configuración común
+  hosts: all
+  become: true
+  roles:
+    - commons
+
+- name: Servidores web con PHP
+  hosts: servidores_web
+  become: true
+  roles:
+    - apache_php

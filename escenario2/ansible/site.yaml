@@ -1,0 +1,11 @@
+- name: Configuración común
+  hosts: all
+  become: true
+  roles:
+    - commons
+
+- name: Servidor web del backend
+  hosts: servidores_web
+  become: true
+  roles:
+    - apache2

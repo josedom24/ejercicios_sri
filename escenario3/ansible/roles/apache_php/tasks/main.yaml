@@ -1,0 +1,20 @@
+- name: Instalar apache2 con PHP
+  ansible.builtin.apt:
+    name:
+      - apache2
+      - libapache2-mod-php
+    state: present
+
+# index.html va antes que index.php en DirectoryIndex: se quita para que se sirva index.php
+- name: Quitar la página por defecto
+  ansible.builtin.file:
+    path: /var/www/html/index.html
+    state: absent
+
+- name: Página que muestra el servidor que atiende la petición
+  ansible.builtin.copy:
+    src: index.php
+    dest: /var/www/html/index.php
+    owner: www-data
+    group: www-data
+    mode: "0644"

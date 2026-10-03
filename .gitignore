@@ -1,0 +1,12 @@
+# OpenTofu/Terraform directories
+.terraform/
+
+# State files
+*.tfstate
+*.tfstate.backup
+
+# Lock file (generated, not source)
+.terraform.lock.hcl
+
+# Inventario de Ansible generado por OpenTofu
+escenario*/ansible/hosts
